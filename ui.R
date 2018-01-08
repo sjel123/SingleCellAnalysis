@@ -8,6 +8,7 @@ library(sqldf)
 library(plotly)
 library(Biobase)
 library(knitr)
+library(shinycssloaders)
 # library(rmarkdown)
 #source("Factors.R")
 
@@ -15,8 +16,10 @@ library(knitr)
 ################################################
 #Load Data.  This is run only once when the server.R is called
 #df3 <<- read.csv("Data/data.csv", nrows=1)
-
-##End Load Data                                                                                                                
+Metadata <- read.table("/home/sjelinsk/projects/AMP_Lupus/Data/metadata.csv", 
+                       header=TRUE, sep=",")
+##End Load Data     
+options(spinner.color.background="#F5F5F5")
 ##################################################
 ui <- fluidPage(
   mainPanel(  
@@ -36,22 +39,22 @@ ui <- fluidPage(
          fluidRow(radioButtons("action_selectiontype", "Disease",
                        choices = c("All", "Kidney", "Skin"),
                        selected = "All", inline = TRUE)),
-        fluidRow(radioButtons("action_selectiontype1", "Cell",
-                              choices = c("All", "Epithelial", "Leukocyte",  "T cell",
-                                          "Monocyte",   "Fibroblast", "B cell"),
-                              selected = "All", inline = TRUE)),
+        
+         fluidRow(radioButtons("action_selectiontype1", "Cell",
+                              choices = c("All", unique(as.character(Metadata$SUBJECT_ID))),
+                                  selected = "All", inline = TRUE)),
 
     fluidRow(
       column(6, #h3(verbatimTextOutput("Gene1")),
-             plotOutput("main_plot",  height = "300px")),
+             withSpinner(plotOutput("main_plot",  height = "300px"))),
       column(6, #h3(verbatimTextOutput("Gene2")),
-             plotOutput("main_plot2",  height = "300px"))
+             withSpinner(plotOutput("main_plot2",  height = "300px"),type=4))
                ),#End Fluid Row
     fluidRow(
       column(6, h3("Expression AMP Phase I Data"),
-             plotOutput("main_plot3",  height = "300px")),   
+             withSpinner(plotOutput("main_plot3",  height = "300px"), type=5, size=2)),   
       column(6, h3("Expression AMP Phase I Data"),
-           plotOutput("main_plot4",  height = "300px"))
+             withSpinner(plotOutput("main_plot4",  height = "300px"),type=6))
       )#End Fluid Row  
     
     ) # end tabPanel

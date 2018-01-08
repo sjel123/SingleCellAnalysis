@@ -160,8 +160,10 @@ for (i in seq(2,40, by=3)){
   print(get(paste0("TSNPlot",i)))
 }
 
-write.table(TSNPlot38$data, "../Data/TNSE.txt", sep="\t")
-write.table(Lupus.data@data, "../Data/ExprsData.txt", sep="\t")
+write.table(TSNPlot5$data, "../Data/TNSE.txt", sep="\t")
+write.table(as.data.frame(as.matrix(Lupus.data@data)), "../Data/ExprsData.txt", sep="\t")
+
+
 
 i=5
 Lupus.data <- RunTSNE(Lupus.data, dims.use = 1:i, do.fast = T)
@@ -240,9 +242,9 @@ print(head(cluster1.markers, 5))
 print(head(cluster2.markers, 5))
 print(head(cluster3.markers, 5))
 
-Luous.markers <- FindAllMarkers(Lupus.data, only.pos=FALSE, min.pct =0.25, thresh.use =0.25)
-top2 <- Luous.markers %>% group_by(cluster) %>% top_n(2, avg_diff)
-top10 <- Luous.markers %>% group_by(cluster) %>% top_n(10, avg_diff)
+Lupus.markers <- FindAllMarkers(Lupus.data, only.pos=FALSE, min.pct =0.25, thresh.use =0.25)
+top2 <- Lupus.markers %>% group_by(cluster) %>% top_n(2, avg_diff)
+top10 <- Lupus.markers %>% group_by(cluster) %>% top_n(10, avg_diff)
 ILC1 <- c("GZMA", "CCL5","IFNG", "KLRD1", "NKG7", "CXCR3")
 ILC2 <- c("GATA3", "RORA", "S100A6")
 ILC3 <- c( "AHR", "LIF", "IL23R", 'CD300LF')

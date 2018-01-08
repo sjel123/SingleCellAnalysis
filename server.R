@@ -126,12 +126,12 @@ shinyServer <- function(input, output, session) {
             if(myData2 != "All"){
               pca <- pca_rotation[which(meta$SUBJECT_ID == myData2),]
             }
-            if(myData1 != "All"&myData2 != "All"){
-              pca <- pca_rotation#[which(meta$TISSUE == myData1),]# & meta$SUBJECT_ID == myData2),]
+            if(myData1 != "All" & myData2 != "All"){
+              pca <- pca_rotation[which(meta$TISSUE == myData1 & meta$SUBJECT_ID == myData2),]
             }
-        if(myData1 == "All"){
-          pca <- pca_rotation#[which(meta$TISSUE == myData1),]# & meta$SUBJECT_ID == myData2),]
-        }
+#         if(myData1 == "All"){
+#           pca <- pca_rotation #[which(meta$TISSUE == myData1 & meta$SUBJECT_ID == myData2),]
+#         }
           print(dim(pca))
           print(myData1)
           pca
@@ -141,19 +141,20 @@ shinyServer <- function(input, output, session) {
       myData1 <- input$'action_selectiontype'
       myData2 <- input$'action_selectiontype1'
         log2cpm <- mydata1
+        cpm <- log2cpm
           if(myData1 != "All"){
             cpm <- log2cpm[,which(meta$TISSUE == myData1)]
           }
           if(myData2 != "All"){
             cpm <- log2cpm[,which(meta$SUBJECT_ID == myData2)]
           }
-          if(myData1 != "All"&myData2 != "All"){
-            cpm <- log2cpm[,which(meta$TISSUE == myData1)]# & meta$SUBJECT_ID == myData2)]
+          if(myData1 != "All" & myData2 != "All"){
+            cpm <- log2cpm[,which(meta$TISSUE == myData1 & meta$SUBJECT_ID == myData2)]
           }
-      if(myData1 == "All"){
-        cpm <- log2cpm# & meta$SUBJECT_ID == myData2)]
-      }
-      print(sprintf("dim(CPM)%s", dim(cpm)))
+#       if(myData1 == "All"){
+#         cpm <- log2cpm# & meta$SUBJECT_ID == myData2)]
+#       }
+      print(sprintf("MyDataCPM dim(CPM)%s", dim(cpm)))
       print(myData1)
       cpm
     })
@@ -164,15 +165,15 @@ shinyServer <- function(input, output, session) {
     myData2 <- input$'action_selectiontype1'
     cpm <- meta
     if(myData1 != "All"){
-      cpm <- meta[which(meta$disease == myData1),]
+      cpm <- meta[which(meta$TISSUE == myData1),]
     }
     if(myData2 != "All"){
-      cpm <- meta[which(meta$type == myData2),]
+      cpm <- meta[which(meta$SUBJECT_ID == myData2),]
     }
-    if(myData1 != "All"&myData2 != "All"){
-      cpm <- meta[which(meta$disease == myData1 & meta$type == myData2),]
+    if(myData1 != "All" & myData2 != "All"){
+      cpm <- meta[which(meta$TISSUE == myData1 & meta$SUBJECT_ID == myData2),]
     }
-    print(sprintf("dim(CPM)%s", dim(cpm)))
+    print(sprintf("myDataMetData dim(CPM)%s", dim(cpm)))
     print(myData1)
     cpm
   })
@@ -231,8 +232,10 @@ shinyServer <- function(input, output, session) {
         DoublePos <- sum(Data3$X>3 & Data3$Y >3) 
         XPos <- sum(Data3$X>3 & Data3$Y <3) 
         YPos <- sum(Data3$X<3 & Data3$Y >3) 
-    colorM = as.character(unlist(myDataMetaData()[,4]))
-    Data3$colorM = myDataMetaData()[,4]
+    #colorM = as.character(unlist(myDataMetaData()[,4]))
+    colorM = myDataMetaData()[,4]
+    print(sprintf("myDataMetaData()[,4] %s", head(colorM)))
+    Data3$colorM = colorM#myDataMetaData()[,4]
     
     print(ggplot(Data3, aes(X,Y, color=colorM))+geom_point(size=3) +
           labs(x=myGene1Inputs(),y= myGene2Inputs())+ 
